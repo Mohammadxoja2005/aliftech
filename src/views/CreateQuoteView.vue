@@ -1,6 +1,35 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import axios from "axios";
+import { useStore } from "vuex";
+
+const store = useStore();
+
+// const quotes = computed(() => {
+//     const fetchedUsers = store.getters['quotes/getUsers'];
+//     console.log(fetchedUsers);
+
+//     return fetchedUsers;
+// }); 
+
+// Accessing module state
+// const users = computed(() => store.state.quotes.quotes);
+// console.log(users.value);
+
+// Accessing the module getters
+// const getUsers = computed(() => store.getters.getUsers);
+
+// console.log(getUsers.value.quotes);
+
+// Accessing the module getters
+// const getUsers = computed(() => store.getters['quotes']);
+//  const getIsLoading = computed(() => store.getters['data/getIsLoading']);
+// console.log(getUsers)
+
+// Accessing the module actions
+const fetchUsers = () => store.dispatch('');
+
+// console.log(fetchUsers);
 
 const now = new Date();
 const date: string = now.toISOString().slice(0, 19).replace('T', ' ');
@@ -13,20 +42,20 @@ const author = ref<string>('');
 
 // const url = ref(process.env.VUE_APP_BACKEND_URL)
 
-const onSubmit = async (event: any) => {
+
+const onSubmit = (event: any): void => {
     event.preventDefault();
-    const formData = new FormData()
 
-    formData.append('author', author.value);
-    formData.append('quote', quote.value);
-    formData.append("genre", selectedGenre.value);
-    formData.append("createdAt", date);
-    formData.append("updatedAt", date);
-
-
-    axios.post('http://localhost:3000/quotes', )
+    axios.post('https://aliftech-backend.onrender.com/quotes', {
+        author: author.value,
+        quote: quote.value,
+        genre: selectedGenre.value,
+        createdAt: date,
+        updatedAt: date
+    }).then((res) => {
+        console.log(res)
+    })
 }
-
 
 </script>
 
