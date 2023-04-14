@@ -1,19 +1,9 @@
 import { createStore } from 'vuex';
 import quotes from './modules/quotes';
 
-const store = createStore({
-    state: {
-        count: 0
-    },
-
+const store = createStore({ 
     modules: {
         quotes: quotes
-    },
-
-    getters: {
-        getDevelopers() {
-            return 'state'
-        }
     }
 });
 

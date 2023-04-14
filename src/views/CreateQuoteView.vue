@@ -1,16 +1,9 @@
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed } from 'vue';
 import axios from "axios";
 import { useStore } from "vuex";
 
 const store = useStore();
-
-// const quotes = computed(() => {
-//     const fetchedUsers = store.getters['quotes/getUsers'];
-//     console.log(fetchedUsers);
-
-//     return fetchedUsers;
-// }); 
 
 // Accessing module state
 // const users = computed(() => store.state.quotes.quotes);
@@ -27,33 +20,38 @@ const store = useStore();
 // console.log(getUsers)
 
 // Accessing the module actions
-const fetchUsers = () => store.dispatch('');
+// const fetchUsers = () => store.dispatch('');
 
 // console.log(fetchUsers);
 
 const now = new Date();
 const date: string = now.toISOString().slice(0, 19).replace('T', ' ');
 
-const genres = ref<Array<string>>(['Inspirational', 'Motivational', 'Philosophical', 'Funny', 'Romantic', 'Political', 'Religious/Spiritual', 'Life Lessons'])
+const genres = ref<Array<string>>(
+    ['Inspirational',
+        'Motivational',
+        'Philosophical',
+        'Funny',
+        'Romantic',
+        'Political',
+        'Religious/Spiritual',
+        'Life Lessons']
+)
 
 const selectedGenre = ref<string>('');
 const quote = ref<string>('');
 const author = ref<string>('');
 
-// const url = ref(process.env.VUE_APP_BACKEND_URL)
-
 
 const onSubmit = (event: any): void => {
     event.preventDefault();
 
-    axios.post('https://aliftech-backend.onrender.com/quotes', {
+    store.dispatch('createQuote', {
         author: author.value,
         quote: quote.value,
         genre: selectedGenre.value,
         createdAt: date,
         updatedAt: date
-    }).then((res) => {
-        console.log(res)
     })
 }
 
