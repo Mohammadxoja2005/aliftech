@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue';
-import axios from "axios";
+import { ref } from 'vue';
 import { useStore } from "vuex";
+import axios from "axios";
 
 const store = useStore();
 
