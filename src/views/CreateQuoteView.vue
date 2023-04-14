@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useStore } from "vuex";
 import axios from "axios";
 
@@ -27,21 +27,10 @@ const store = useStore();
 const now = new Date();
 const date: string = now.toISOString().slice(0, 19).replace('T', ' ');
 
-const genres = ref<Array<string>>(
-    ['Inspirational',
-        'Motivational',
-        'Philosophical',
-        'Funny',
-        'Romantic',
-        'Political',
-        'Religious/Spiritual',
-        'Life Lessons']
-)
-
+const genres = computed(() => store.getters.getGenres);
 const selectedGenre = ref<string>('');
 const quote = ref<string>('');
 const author = ref<string>('');
-
 
 const onSubmit = (event: any): void => {
     event.preventDefault();

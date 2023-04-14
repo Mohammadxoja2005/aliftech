@@ -1,6 +1,14 @@
 import axios from 'axios';
 
 const state = {
+    genres: ['Inspirational',
+        'Motivational',
+        'Philosophical',
+        'Funny',
+        'Romantic',
+        'Political',
+        'Religious/Spiritual',
+        'Life Lessons'],
     quotes: []
 }
 
@@ -37,7 +45,8 @@ const actions = {
 }
 
 const getters = {
-    getPosts: (state: any) => state
+    getPosts: (state: any) => state.quotes,
+    getGenres: (state: any) => state.genres
 }
 
 export default {
