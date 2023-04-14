@@ -1,14 +1,25 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, watch, reactive, ref } from "vue";
 import { useStore } from "vuex";
 
 const store = useStore();
 
+const authors = reactive([]);
 const genres = computed(() => store.getters.getGenres);
 
-const onCheck = (e) => {
-    console.log(genres);
-    console.log(e.target.value);
+const selectedGenre = ref<string>('');
+const selectedAuthor = ref<string>('');
+
+
+store.dispatch('getAuthors')
+    .then(() => {
+        authors.push(...store.getters.getAuthors)
+    })
+
+const onCheck = (event) => {
+    event.preventDefault();
+    console.log(authors.value);
+    store.dispatch('getAuthors');
 }
 
 </script>
@@ -19,7 +30,7 @@ const onCheck = (e) => {
 
             <div>
                 <input type="text">
-                <button>search</button>
+                <button @click="onCheck($event)">search</button>
             </div>
 
             <div>
@@ -30,6 +41,25 @@ const onCheck = (e) => {
                 <input type="radio" name="filter" value="author">
                 <label for="author">Author</label>
             </div>
+
+            <div>
+                <select v-model="selectedGenre">
+
+                    <option disabled value="">Выбирете жанр</option>
+
+                    <option v-for="(item) in genres" :value="item">{{ item }}</option>
+
+                </select>
+
+                <select v-model="selectedAuthor">
+
+                    <option disabled value="">Выбирете автора</option>
+
+                    <option v-for="(item) in authors" :value="item">{{ item }}</option>
+
+                </select>
+            </div>
+
         </div>
 
     </form>
