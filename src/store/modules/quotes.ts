@@ -10,7 +10,8 @@ const state = {
         'Religious/Spiritual',
         'Life Lessons'],
     quotes: [],
-    authors: []
+    authors: [],
+    randomQuotes: []
 }
 
 const mutations = {
@@ -20,6 +21,10 @@ const mutations = {
 
     SET_AUTHORS(state: any, payload: any) {
         state.authors = payload;
+    },
+
+    SET_RANDOM_QUOTES(state: any, payload: any) {
+        state.randomQuotes = payload;
     }
 }
 
@@ -47,8 +52,8 @@ const actions = {
         }
     },
 
-    async updateQuote({ commit }: any, quote: { id:number, author: string, quote: string, genre: string, createdAt: string }) {
-        // console.log(quote)
+    async updateQuote({ commit }: any, quote: { id: number, author: string, quote: string, genre: string, createdAt: string }) {
+
         try {
             await axios.put(`https://aliftech-backend.onrender.com/quotes/${quote.id}`, quote)
                 .then((response: any) => {
@@ -84,13 +89,27 @@ const actions = {
         } catch (error) {
             console.log(error);
         }
+    },
+
+    async generateRandomQuote({ commit }: any) {
+        try {
+            await axios.get('https://aliftech-backend.onrender.com/quotes')
+                .then((response) => {
+                    const randomIndex = Math.round(Math.random() * (response.data.length - 1));
+                    // console.log(response.data[randomIndex]);
+                    commit('SET_RANDOM_QUOTES', response.data[randomIndex]);
+                })
+        } catch (error) {
+            console.log(error);
+        }
     }
 }
 
 const getters = {
     getQuotes: (state: any) => state.quotes,
     getGenres: (state: any) => state.genres,
-    getAuthors: (state: any) => state.authors
+    getAuthors: (state: any) => state.authors,
+    getRandomQuotes: (state: any) => state.randomQuotes
 }
 
 export default {

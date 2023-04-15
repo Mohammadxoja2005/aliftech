@@ -4,8 +4,6 @@ import { RouterLink } from 'vue-router'
 import { useStore } from "vuex";
 import axios from "axios";
 
-
-
 // Accessing module state
 // const users = computed(() => store.state.quotes.quotes);
 // console.log(users.value);
@@ -50,26 +48,6 @@ const onSubmit = (event: any): void => {
 }
 
 </script>
-
-<!-- <template>
-    <form>
-        <input type="text" v-model="quote" placeholder="тескт цитаты">
-        <input type="text" v-model="author" placeholder="автор цитаты">
-
-        <select v-model="selectedGenre" name="" id="">
-            <option disabled value="">Выбирете один жанр</option>
-
-            <option v-for="(item) in genres" :value="item">
-                {{ item }}
-            </option>
-        </select>
-        <button @click="onSubmit($event)">create quote</button>
-    </form>
-</template>
-
-<style scoped></style> --> 
-
-
 <template>
     <form>
         <div class="form-container">
@@ -96,8 +74,7 @@ const onSubmit = (event: any): void => {
     </form>
 </template>
   
-<style scoped> 
-.form-container {
+<style scoped> .form-container {
      display: flex;
      flex-direction: column;
      align-items: center;

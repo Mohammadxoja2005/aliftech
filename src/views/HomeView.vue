@@ -18,6 +18,7 @@ let modalDeletesShow = ref<boolean>(false);
 let modalUpdateShow = ref<boolean>(false);
 let deleteId = ref<number>();
 let updateId = ref<number>();
+
 const now = new Date();
 const date: string = now.toISOString().slice(0, 19).replace('T', ' ');
 
