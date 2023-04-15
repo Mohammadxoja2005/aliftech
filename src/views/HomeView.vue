@@ -6,8 +6,10 @@ const store = useStore();
 
 const selectedGenre = ref<string>('');
 const selectedAuthor = ref<string>('');
-const selectedChoice = ref<string>('quote')
+const selectedChoice = ref<string>('quote');
 const searchInput = ref<string>('');
+let modalShow = ref<boolean>(false);
+let deleteId = ref<number>();
 
 const authors = reactive([]);
 let quotes = reactive([]);
@@ -62,7 +64,27 @@ const searchByChoice = computed(() => {
 
     return filtered;
 })
-console.log(searchByChoice)
+
+const openModalDelete = (id, event) => {
+    event.preventDefault();
+    modalShow.value = true;
+    deleteId = id;
+}
+
+const closeModal = (event) => {
+    event.preventDefault();
+    modalShow.value = false;
+}
+
+const deleteQuote = (event) => {
+    event.preventDefault();
+
+    store.dispatch('deleteQuote', deleteId)
+        .then(() => {
+            window.location.reload();
+        })
+    // console.log("clicked to delete");
+}
 
 </script>
 
@@ -111,13 +133,26 @@ console.log(searchByChoice)
 
                     <div class="card-btns">
                         <button class="card-see">See details</button>
-                        <button class="card-delete">Delete quote</button>
+                        <button class="card-delete" @click="openModalDelete(item.id, $event)">Delete quote</button>
                         <button class="card-update">Update quote</button>
                     </div>
                 </div>
             </div>
         </div>
     </form>
+
+    <div class="modal-container" v-if="modalShow">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Are you sure about deleting data?</h2>
+                <button @click="closeModal($event)">X</button>
+            </div>
+            <div class="modal-footer">
+                <button @click="deleteQuote($event)">Delete</button>
+                <button @click="closeModal($event)">Close</button>
+            </div>
+        </div>
+    </div>
 </template>
   
 <style scoped>
@@ -254,6 +289,69 @@ button {
 
 .card-update {
     background-color: orange;
+}
+
+
+
+/* modal part */
+
+.modal-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal {
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    max-width: 90%;
+    max-height: 90%;
+    overflow: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.modal-header h2 {
+    margin: 0;
+}
+
+.modal-header button {
+    background-color: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.modal-body {
+    margin-bottom: 1rem;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.modal-footer button {
+    background-color: #0099ff;
+    color: #fff;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
 }
 </style>
 

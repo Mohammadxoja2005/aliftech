@@ -47,6 +47,17 @@ const actions = {
         }
     },
 
+    async deleteQuote({ commit }: any, id: number) {
+        try {
+            await axios.delete(`https://aliftech-backend.onrender.com/quotes/${id}`)
+                .then((response: any) => {
+                    commit("SET_QUOTES", response.data);
+                })
+        } catch (error) {
+            console.log(error);
+        }
+    },
+
     async getAuthors({ commit }: any) {
         const authors = [];
 
