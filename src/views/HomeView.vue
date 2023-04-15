@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watchEffect, reactive, ref } from "vue";
+import { computed, watchEffect, reactive, ref, watch } from "vue";
 import { useStore } from "vuex";
 
 const store = useStore();
@@ -11,6 +11,7 @@ const searchInput = ref<string>('');
 
 const authors = reactive([]);
 let quotes = reactive([]);
+const filteredQuotes = reactive([]);
 const genres = computed(() => store.getters.getGenres);
 
 watchEffect(() => {
@@ -24,29 +25,52 @@ watchEffect(() => {
     store.dispatch('getQuotes')
         .then(() => {
             quotes.push(...store.getters.getQuotes);
+            filteredQuotes.push(...store.getters.getQuotes);
         })
 })
 
-// const searchByChoice = () => {
-//     switch (selectedChoice) {
-//         case 'quote': quotes.filter(item => item.quote.includes(searchInput)); break;
-//         case 'author': quotes.filter(item => item.author.includes(searchInput)); break;
-//     }
-// }
-
-const onCheck = (event) => {
-    event.preventDefault();
+const searchByChoice = () => {
 
     switch (selectedChoice.value) {
         case 'quote': {
-            quotes = quotes.filter(item => item.quote.toLowerCase().trim().includes(searchInput.value.toLowerCase().trim()))
+            quotes = filteredQuotes.filter(item => item.quote.toLowerCase().trim().includes(searchInput.value.toLowerCase().trim()))
         }; break;
         case 'author': {
-            quotes = quotes.filter(item => item.author.toLowerCase().trim().includes(searchInput.value.toLowerCase().trim()))
+            quotes = filteredQuotes.filter(item => item.author.toLowerCase().trim().includes(searchInput.value.toLowerCase().trim()))
         }; break;
 
         default: console.log("nothing worked");
     }
+
+    const filtered = quotes.filter((item) => {
+        // Check search text
+        const searchTextMatch =
+            searchInput.value === '' ||
+            item.quote.toLowerCase().includes(searchInput.value.toLowerCase()) ||
+            item.author.toLowerCase().includes(searchInput.value.toLowerCase())
+
+        // Check author filter
+        const authorFilterMatch =
+            selectedAuthor.value === '' || item.author === selectedAuthor.value
+
+        // Check genre filter
+        const genreFilterMatch =
+            selectedGenre.value === '' || item.genre === selectedGenre.value
+
+        return searchTextMatch && authorFilterMatch && genreFilterMatch
+    })
+
+    return filtered;
+}
+
+// watch(quotes, (oldValue, newValue) => {
+//     console.log(newValue);
+// })
+
+const onCheck = (event) => {
+    event.preventDefault();
+
+    quotes = searchByChoice();
     console.log(quotes);
 }
 
@@ -55,7 +79,6 @@ const onCheck = (event) => {
 <template>
     <form>
         <div>
-
             <div>
                 <input type="text" v-model="searchInput">
                 <button @click="onCheck($event)">search</button>
@@ -84,6 +107,10 @@ const onCheck = (event) => {
                     <option v-for="(item) in authors" :value="item">{{ item }}</option>
 
                 </select>
+            </div>
+
+            <div>
+                
             </div>
 
         </div>

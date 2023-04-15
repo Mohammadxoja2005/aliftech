@@ -3,7 +3,6 @@ import { ref, computed } from 'vue';
 import { useStore } from "vuex";
 import axios from "axios";
 
-const store = useStore();
 
 // Accessing module state
 // const users = computed(() => store.state.quotes.quotes);
@@ -22,7 +21,9 @@ const store = useStore();
 // Accessing the module actions
 // const fetchUsers = () => store.dispatch('');
 
-// console.log(fetchUsers);
+// console.log(fetchUsers); 
+
+const store = useStore();
 
 const now = new Date();
 const date: string = now.toISOString().slice(0, 19).replace('T', ' ');
