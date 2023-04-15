@@ -47,12 +47,21 @@ const actions = {
         }
     },
 
+    async updateQuote({ commit }: any, quote: { id:number, author: string, quote: string, genre: string, createdAt: string }) {
+        // console.log(quote)
+        try {
+            await axios.put(`https://aliftech-backend.onrender.com/quotes/${quote.id}`, quote)
+                .then((response: any) => {
+                    console.log(response.data);
+                })
+        } catch (error) {
+            console.log(error);
+        }
+    },
+
     async deleteQuote({ commit }: any, id: number) {
         try {
             await axios.delete(`https://aliftech-backend.onrender.com/quotes/${id}`)
-                .then((response: any) => {
-                    commit("SET_QUOTES", response.data);
-                })
         } catch (error) {
             console.log(error);
         }

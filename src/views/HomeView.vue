@@ -10,11 +10,16 @@ const selectedAuthor = ref<string>('');
 const selectedChoice = ref<string>('quote');
 const searchInput = ref<string>('');
 
+const quote = ref<string>('')
+const author = ref<string>('');
+const genre = ref<number>();
 
 let modalDeletesShow = ref<boolean>(false);
 let modalUpdateShow = ref<boolean>(false);
 let deleteId = ref<number>();
 let updateId = ref<number>();
+const now = new Date();
+const date: string = now.toISOString().slice(0, 19).replace('T', ' ');
 
 const authors = reactive([]);
 let quotes = reactive([]);
@@ -99,7 +104,18 @@ const deleteQuote = (event) => {
 
 const updateQuote = (event) => {
     event.preventDefault();
-    console.log(updateId);
+
+    const updateQuoteObject = {
+        id: updateId,
+        quote: quote.value,
+        author: author.value,
+        genre: genre.value,
+        updatedAt: date,
+    }
+    store.dispatch('updateQuote', updateQuoteObject)
+        .then(() => {
+            window.location.reload();
+        })
 }
 
 </script>
@@ -127,12 +143,12 @@ const updateQuote = (event) => {
 
                 <div class="select-inputs">
                     <select v-model="selectedGenre">
-                        <option disabled value="">Choose a genre</option>
+                        <option disabled value="">Выбрать жанр</option>
                         <option v-for="(item) in genres" :value="item">{{ item }}</option>
                     </select>
 
                     <select v-model="selectedAuthor">
-                        <option disabled value="">Choose an author</option>
+                        <option disabled value="">Выбрать автора</option>
                         <option v-for="(item) in authors" :value="item">{{ item }}</option>
                     </select>
                 </div>
@@ -150,8 +166,8 @@ const updateQuote = (event) => {
 
                     <div class="card-btns">
                         <!-- <button class="card-see">See details</button> -->
-                        <button class="card-delete" @click="openModalDelete(item.id, $event)">Delete quote</button>
-                        <button class="card-update" @click="openModalUpdate(item.id, $event)">Update quote</button>
+                        <button class="card-delete" @click="openModalDelete(item.id, $event)">Удалить цитату</button>
+                        <button class="card-update" @click="openModalUpdate(item.id, $event)">Обновить цитату</button>
                     </div>
                 </div>
             </div>
@@ -165,8 +181,8 @@ const updateQuote = (event) => {
                 <button @click="closeModal($event)">X</button>
             </div>
             <div class="modal-footer">
-                <button @click="deleteQuote($event)">Delete</button>
-                <button @click="closeModal($event)">Close</button>
+                <button @click="deleteQuote($event)">Удалить</button>
+                <button @click="closeModal($event)">Закрыть</button>
             </div>
         </div>
     </div>
@@ -186,13 +202,13 @@ const updateQuote = (event) => {
 
                 <div class="input-container">
                     <label for="genre" class="label">Жанр:</label>
-                    <select v-model="selectedGenre" id="genre" class="input">
+                    <select v-model="genre" id="genre" class="input">
                         <option disabled value="">Выберите один жанр</option>
                         <option v-for="(item) in genres" :value="item">{{ item }}</option>
                     </select>
                 </div>
 
-                <button @click="updateQuote($event)" class="button">Создать цитату</button>
+                <button @click="updateQuote($event)" class="button">Обновить цитату</button>
                 <button @click="closeModal($event)" class="button">Закрыть</button>
             </div>
         </form>
