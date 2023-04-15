@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, watchEffect, reactive, ref, watch } from "vue";
+import { RouterLink } from 'vue-router'
 import { useStore } from "vuex";
 
 const store = useStore();
@@ -8,8 +9,12 @@ const selectedGenre = ref<string>('');
 const selectedAuthor = ref<string>('');
 const selectedChoice = ref<string>('quote');
 const searchInput = ref<string>('');
-let modalShow = ref<boolean>(false);
+
+
+let modalDeletesShow = ref<boolean>(false);
+let modalUpdateShow = ref<boolean>(false);
 let deleteId = ref<number>();
+let updateId = ref<number>();
 
 const authors = reactive([]);
 let quotes = reactive([]);
@@ -67,13 +72,20 @@ const searchByChoice = computed(() => {
 
 const openModalDelete = (id, event) => {
     event.preventDefault();
-    modalShow.value = true;
+    modalDeletesShow.value = true;
     deleteId = id;
+}
+
+const openModalUpdate = (id, event) => {
+    event.preventDefault();
+    modalUpdateShow.value = true;
+    updateId = id;
 }
 
 const closeModal = (event) => {
     event.preventDefault();
-    modalShow.value = false;
+    modalDeletesShow.value = false;
+    modalUpdateShow.value = false;
 }
 
 const deleteQuote = (event) => {
@@ -83,7 +95,11 @@ const deleteQuote = (event) => {
         .then(() => {
             window.location.reload();
         })
-    // console.log("clicked to delete");
+}
+
+const updateQuote = (event) => {
+    event.preventDefault();
+    console.log(updateId);
 }
 
 </script>
@@ -92,6 +108,7 @@ const deleteQuote = (event) => {
     <form>
         <div class="form-container">
             <div class="form-inputs">
+                <router-link to="/create" class="create-link"><button>go to create quote page</button></router-link>
                 <div class="search-input">
                     <input type="text" v-model="searchInput" placeholder="Search...">
                 </div>
@@ -132,16 +149,16 @@ const deleteQuote = (event) => {
                     </div>
 
                     <div class="card-btns">
-                        <button class="card-see">See details</button>
+                        <!-- <button class="card-see">See details</button> -->
                         <button class="card-delete" @click="openModalDelete(item.id, $event)">Delete quote</button>
-                        <button class="card-update">Update quote</button>
+                        <button class="card-update" @click="openModalUpdate(item.id, $event)">Update quote</button>
                     </div>
                 </div>
             </div>
         </div>
     </form>
 
-    <div class="modal-container" v-if="modalShow">
+    <div class="modal-container" v-if="modalDeletesShow">
         <div class="modal">
             <div class="modal-header">
                 <h2>Are you sure about deleting data?</h2>
@@ -153,9 +170,116 @@ const deleteQuote = (event) => {
             </div>
         </div>
     </div>
+
+    <div class="modal-container" v-if="modalUpdateShow">
+
+        <form>
+            <div class="form-container">
+                <div class="input-container">
+                    <label for="quote" class="label">Текст цитаты:</label>
+                    <input type="text" v-model="quote" id="quote" class="input" placeholder="Введите текст цитаты">
+                </div>
+                <div class="input-container">
+                    <label for="author" class="label">Автор цитаты:</label>
+                    <input type="text" v-model="author" id="author" class="input" placeholder="Введите автора цитаты">
+                </div>
+
+                <div class="input-container">
+                    <label for="genre" class="label">Жанр:</label>
+                    <select v-model="selectedGenre" id="genre" class="input">
+                        <option disabled value="">Выберите один жанр</option>
+                        <option v-for="(item) in genres" :value="item">{{ item }}</option>
+                    </select>
+                </div>
+
+                <button @click="updateQuote($event)" class="button">Создать цитату</button>
+                <button @click="closeModal($event)" class="button">Закрыть</button>
+            </div>
+        </form>
+    </div>
 </template>
   
 <style scoped>
+/* modal part */
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 0 auto;
+    max-width: 600px;
+    padding: 1rem;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.label {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.input {
+    padding: 0.5rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+}
+
+.button {
+    padding: 0.5rem;
+    border-radius: 5px;
+    border: none;
+    background-color: #007aff;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.button:hover {
+    background-color: #0062cc;
+}
+
+@media screen and (min-width: 768px) {
+    .form-container {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 2rem;
+    }
+
+    .input-container {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .label {
+        font-size: 1.5rem;
+    }
+
+    .input {
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .button {
+        padding: 0.75rem 1.5rem;
+        font-size: 1.2rem;
+    }
+}
+
+
+.create-link {
+    margin-bottom: 10px;
+}
+
 .form-container {
     display: flex;
     flex-direction: column;
@@ -292,9 +416,6 @@ button {
 }
 
 
-
-/* modal part */
-
 .modal-container {
     position: fixed;
     top: 0;
@@ -353,5 +474,7 @@ button {
     border-radius: 5px;
     padding: 0.5rem 1rem;
 }
+
+/* modal update part */
 </style>
 
