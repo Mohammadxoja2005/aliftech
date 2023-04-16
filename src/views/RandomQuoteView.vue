@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, reactive, watch, ref } from "vue";
 import { useStore } from "vuex";
+import { RouterLink } from 'vue-router'
 
 const store = useStore();
 
@@ -27,6 +28,11 @@ const generateQuote = () => {
 
 <template>
   <div class="quote-generator">
+    <router-link to="/">
+      <button class="quote-generator__button">
+        Пойти в основну страницу
+      </button>
+    </router-link>
     <button @click="generateQuote" class="quote-generator__button">
       Сгенерировать цитату
     </button>
@@ -69,6 +75,7 @@ const generateQuote = () => {
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   transition: all 0.3s ease;
+  margin-bottom: 20px;
 }
 
 .quote-generator__button:hover {

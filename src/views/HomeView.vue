@@ -127,20 +127,21 @@ const updateQuote = (event: any) => {
     <form>
         <div class="form-container">
             <div class="form-inputs">
-                <router-link to="/create" class="create-link"><button>go to create quote page</button></router-link>
+                <router-link to="/create" class="create-link"><button>создать цитату</button></router-link>
+                <router-link to="/random" class="create-link"><button>сделать рандомную цитату</button></router-link>
                 <div class="search-input">
-                    <input type="text" v-model="searchInput" placeholder="Search...">
+                    <input type="text" v-model="searchInput" placeholder="Поиск...">
                 </div>
 
                 <div class="radio-buttons">
                     <label>
                         <input v-model="selectedChoice" type="radio" name="filter" value="quote">
-                        Quote
+                        Цитата
                     </label>
 
                     <label>
                         <input v-model="selectedChoice" type="radio" name="filter" value="author">
-                        Author
+                        Автор
                     </label>
                 </div>
 

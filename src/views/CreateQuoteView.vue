@@ -3,25 +3,6 @@ import { ref, computed } from 'vue';
 import { RouterLink } from 'vue-router'
 import { useStore } from "vuex";
 
-// Accessing module state
-// const users = computed(() => store.state.quotes.quotes);
-// console.log(users.value);
-
-// Accessing the module getters
-// const getUsers = computed(() => store.getters.getUsers);
-
-// console.log(getUsers.value.quotes);
-
-// Accessing the module getters
-// const getUsers = computed(() => store.getters['quotes']);
-//  const getIsLoading = computed(() => store.getters['data/getIsLoading']);
-// console.log(getUsers)
-
-// Accessing the module actions
-// const fetchUsers = () => store.dispatch('');
-
-// console.log(fetchUsers); 
-
 const store = useStore();
 
 const now = new Date();
@@ -68,7 +49,7 @@ const onSubmit = (event: any): void => {
             </div>
 
             <button @click="onSubmit($event)">Создать цитату</button>
-            <router-link to="/" class=""><button>Go to Home</button></router-link>
+            <router-link to="/" class=""><button>Пойти в основеую страницу</button></router-link>
         </div>
     </form>
 </template>
