@@ -2,7 +2,6 @@
 import { ref, computed } from 'vue';
 import { RouterLink } from 'vue-router'
 import { useStore } from "vuex";
-import axios from "axios";
 
 // Accessing module state
 // const users = computed(() => store.state.quotes.quotes);

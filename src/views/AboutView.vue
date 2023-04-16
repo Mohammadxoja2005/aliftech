@@ -16,6 +16,7 @@ const generateQuote = () => {
 </script> 
 
 <template>
+  
   <div class="quote-generator">
     <button @click="generateQuote" class="quote-generator__button">
       Сгенерировать цитату

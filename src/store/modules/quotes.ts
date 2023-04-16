@@ -73,12 +73,12 @@ const actions = {
     },
 
     async getAuthors({ commit }: any) {
-        const authors = [];
+        const authors: Array<string> = [];
 
         try {
             await axios.get('https://aliftech-backend.onrender.com/quotes')
                 .then((response) => {
-                    response.data.forEach(element => {
+                    response.data.forEach((element: { author: string }) => {
                         authors.push(element.author)
                     });
                     return authors;
@@ -118,3 +118,6 @@ export default {
     mutations,
     actions,
 };
+
+// "ignoreDeprecations": "5.0",
+// "verbatimModuleSyntax": true,

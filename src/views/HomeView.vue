@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watchEffect, reactive, ref, watch } from "vue";
+import { computed, watchEffect, reactive, ref } from "vue";
 import { RouterLink } from 'vue-router'
 import { useStore } from "vuex";
 
@@ -16,15 +16,17 @@ const genre = ref<number>();
 
 let modalDeletesShow = ref<boolean>(false);
 let modalUpdateShow = ref<boolean>(false);
-let deleteId = ref<number>();
-let updateId = ref<number>();
+let deleteId = ref<number | undefined>();
+let updateId = ref<number | undefined>();
 
 const now = new Date();
 const date: string = now.toISOString().slice(0, 19).replace('T', ' ');
 
-const authors = reactive([]);
-let quotes = reactive([]);
-const filteredQuotes = reactive([]);
+const authors = reactive<Array<string>>([]);
+
+let quotes = reactive<Array<{ id: number, author: string, genre: string, quote: string, updatedAt: string }>>([]);
+
+const filteredQuotes = reactive<Array<{ id: number, author: string, genre: string, quote: string, updatedAt: string }>>([]);
 const genres = computed(() => store.getters.getGenres);
 
 watchEffect(() => {
@@ -46,10 +48,10 @@ const searchByChoice = computed(() => {
 
     switch (selectedChoice.value) {
         case 'quote': {
-            quotes = filteredQuotes.filter(item => item.quote.toLowerCase().trim().includes(searchInput.value.toLowerCase().trim()))
+            quotes = filteredQuotes.filter((item: any) => item.quote.toLowerCase().trim().includes(searchInput.value.toLowerCase().trim()))
         }; break;
         case 'author': {
-            quotes = filteredQuotes.filter(item => item.author.toLowerCase().trim().includes(searchInput.value.toLowerCase().trim()))
+            quotes = filteredQuotes.filter((item: any) => item.author.toLowerCase().trim().includes(searchInput.value.toLowerCase().trim()))
         }; break;
 
         default: console.log("nothing worked");
@@ -76,25 +78,25 @@ const searchByChoice = computed(() => {
     return filtered;
 })
 
-const openModalDelete = (id, event) => {
+const openModalDelete = (id: number, event: any) => {
     event.preventDefault();
     modalDeletesShow.value = true;
-    deleteId = id;
+    deleteId.value = id;
 }
 
-const openModalUpdate = (id, event) => {
+const openModalUpdate = (id: number, event: any) => {
     event.preventDefault();
     modalUpdateShow.value = true;
-    updateId = id;
+    updateId.value = id;
 }
 
-const closeModal = (event) => {
+const closeModal = (event: any) => {
     event.preventDefault();
     modalDeletesShow.value = false;
     modalUpdateShow.value = false;
 }
 
-const deleteQuote = (event) => {
+const deleteQuote = (event: any) => {
     event.preventDefault();
 
     store.dispatch('deleteQuote', deleteId)
@@ -103,7 +105,7 @@ const deleteQuote = (event) => {
         })
 }
 
-const updateQuote = (event) => {
+const updateQuote = (event: any) => {
     event.preventDefault();
 
     const updateQuoteObject = {
