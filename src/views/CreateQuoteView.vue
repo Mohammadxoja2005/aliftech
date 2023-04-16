@@ -16,6 +16,11 @@ const author = ref<string>('');
 const onSubmit = (event: any): void => {
     event.preventDefault();
 
+    if (author.value === '' || quote.value == '') {
+        alert('автор и цитата не может быть пустым')
+        return;
+    }
+
     store.dispatch('createQuote', {
         author: author.value,
         quote: quote.value,

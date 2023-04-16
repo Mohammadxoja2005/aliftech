@@ -29,6 +29,7 @@ let quotes = reactive<Array<{ id: number, author: string, genre: string, quote: 
 const filteredQuotes = reactive<Array<{ id: number, author: string, genre: string, quote: string, updatedAt: string }>>([]);
 const genres = computed(() => store.getters.getGenres);
 
+
 watchEffect(() => {
     store.dispatch('getAuthors')
         .then(() => {
@@ -99,7 +100,7 @@ const closeModal = (event: any) => {
 const deleteQuote = (event: any) => {
     event.preventDefault();
 
-    store.dispatch('deleteQuote', deleteId)
+    store.dispatch('deleteQuote', deleteId.value)
         .then(() => {
             window.location.reload();
         })
@@ -109,12 +110,13 @@ const updateQuote = (event: any) => {
     event.preventDefault();
 
     const updateQuoteObject = {
-        id: updateId,
+        id: updateId.value,
         quote: quote.value,
         author: author.value,
         genre: genre.value,
         updatedAt: date,
     }
+
     store.dispatch('updateQuote', updateQuoteObject)
         .then(() => {
             window.location.reload();
