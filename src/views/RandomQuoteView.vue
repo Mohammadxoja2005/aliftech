@@ -1,22 +1,20 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { computed } from "vue";
 import { useStore } from "vuex";
 
 const store = useStore();
 
 store.dispatch('generateRandomQuote');
-const randomQuote = computed(() => store.getters.getRandomQuotes);
+const randomQuote: any = computed(() => store.getters.getRandomQuotes);
 
 const generateQuote = () => {
   store.dispatch('generateRandomQuote');
   console.log(randomQuote.author);
-
 }
 
 </script> 
 
 <template>
-  
   <div class="quote-generator">
     <button @click="generateQuote" class="quote-generator__button">
       Сгенерировать цитату

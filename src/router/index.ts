@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import AboutView from '../views/AboutView.vue'
+import RandomQuoteView from '../views/RandomQuoteView.vue'
 import CreateQuoteView from "../views/CreateQuoteView.vue"
 
 const router = createRouter({
@@ -13,12 +13,12 @@ const router = createRouter({
     },
     {
       path: '/about',
-      name: 'about', 
-      component: AboutView
-    }, 
+      name: 'about',
+      component: RandomQuoteView
+    },
     {
       path: '/create',
-      name: 'createQuote', 
+      name: 'createQuote',
       component: CreateQuoteView
     }
   ]
