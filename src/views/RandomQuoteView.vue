@@ -49,7 +49,7 @@ const generateQuote = () => {
 
       </div>
       <div v-else>
-        <div>click to blue button generate quote</div>
+        <div>нажмите на синию кнопку что бы сгенерировать цитату</div>
       </div>
     </div>
 
