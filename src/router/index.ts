@@ -12,8 +12,8 @@ const router = createRouter({
       component: HomeView
     },
     {
-      path: '/about',
-      name: 'about',
+      path: '/random',
+      name: 'random',
       component: RandomQuoteView
     },
     {
