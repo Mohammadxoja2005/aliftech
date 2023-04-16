@@ -1,15 +1,26 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, reactive, watch, ref } from "vue";
 import { useStore } from "vuex";
 
 const store = useStore();
 
 store.dispatch('generateRandomQuote');
-const randomQuote: any = computed(() => store.getters.getRandomQuotes);
+
+let randomQuote: any = ref();
+let authorName = ref<string>('');
+let quote = ref<string>('');
+let genre = ref<string>('');
+let lastUpdated = ref<string>('');
 
 const generateQuote = () => {
-  store.dispatch('generateRandomQuote');
-  console.log(randomQuote.author);
+  store.dispatch('generateRandomQuote')
+    .then(() => {
+      randomQuote.value = computed(() => store.getters.getRandomQuotes);
+      authorName.value = randomQuote.value.value.author;
+      quote.value = randomQuote.value.value.quote;
+      genre.value = randomQuote.value.value.genre;
+      lastUpdated.value = randomQuote.value.value.updatedAt;
+    })
 }
 
 </script> 
@@ -21,18 +32,19 @@ const generateQuote = () => {
     </button>
 
     <div class="card">
-
-      <div class="card-item">
-        <div class="card-author">Автор: {{ randomQuote.author }}</div>
-        <div class="card-quote">Цитата</div>
+      <div class="card-item" v-if="authorName">
+        <div class="card-author">Автор: {{ authorName }} </div>
+        <div class="card-quote">{{ quote }}</div>
 
         <div class="card-container-updates">
-          <div class="card-genre">Genre: </div>
-          <div class="card-updated">Last Updated: </div>
+          <div class="card-genre">Genre: {{ genre }}</div>
+          <div class="card-updated">Last Updated: {{ lastUpdated }}</div>
         </div>
 
       </div>
-
+      <div v-else>
+        <div>click to blue button generate quote</div>
+      </div>
     </div>
 
   </div>
@@ -94,6 +106,7 @@ const generateQuote = () => {
   display: flex;
   justify-content: space-between;
   width: 100%;
+  gap: 20px;
 }
 
 .card-genre,
