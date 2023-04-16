@@ -24,9 +24,9 @@ const date: string = now.toISOString().slice(0, 19).replace('T', ' ');
 
 const authors = reactive<Array<string>>([]);
 
-let quotes = reactive<Array<{ id: number, author: string, genre: string, quote: string, updatedAt: string }>>([]);
+let quotes = reactive<Array<{ id: number, author: string, genre: string, quote: string, updatedAt: string, createdAt: string }>>([]);
 
-const filteredQuotes = reactive<Array<{ id: number, author: string, genre: string, quote: string, updatedAt: string }>>([]);
+const filteredQuotes = reactive<Array<{ id: number, author: string, genre: string, quote: string, updatedAt: string, createdAt: string }>>([]);
 const genres = computed(() => store.getters.getGenres);
 
 
@@ -167,6 +167,7 @@ const updateQuote = (event: any) => {
 
                     <div class="card-container-updates">
                         <div class="card-genre">Genre: {{ item.genre }}</div>
+                        <div class="card-updated">Created: {{ item.createdAt }}</div>
                         <div class="card-updated">Last Updated: {{ item.updatedAt }}</div>
                     </div>
 
