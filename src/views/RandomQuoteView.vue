@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, reactive, watch, ref } from "vue";
+import { computed, ref } from "vue";
 import { useStore } from "vuex";
 import { RouterLink } from 'vue-router'
 
