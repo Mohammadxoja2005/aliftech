@@ -52,7 +52,7 @@ const actions = {
         }
     },
 
-    async updateQuote({ commit }: any, quote: { id: number, author: string, quote: string, genre: string, createdAt: string }) {
+    async updateQuote({ commit }: any, quote: { id: number, author: string, quote: string, genre: string, updatedAt: string }) {
 
         try {
             await axios.put(`https://aliftech-backend.onrender.com/quotes/${quote.id}`, quote)

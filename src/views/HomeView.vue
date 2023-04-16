@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watchEffect, reactive, ref } from "vue";
+import { computed, watchEffect, reactive, ref, watch } from "vue";
 import { RouterLink } from 'vue-router'
 import { useStore } from "vuex";
 
@@ -10,6 +10,8 @@ const selectedAuthor = ref<string>('');
 const selectedChoice = ref<string>('quote');
 const searchInput = ref<string>('');
 
+const sortByDate = ref<string>('');
+
 const quote = ref<string>('')
 const author = ref<string>('');
 const genre = ref<number>();
@@ -18,6 +20,7 @@ let modalDeletesShow = ref<boolean>(false);
 let modalUpdateShow = ref<boolean>(false);
 let deleteId = ref<number | undefined>();
 let updateId = ref<number | undefined>();
+let createdAt = ref<string | undefined>('');
 
 const now = new Date();
 const date: string = now.toISOString().slice(0, 19).replace('T', ' ');
@@ -73,10 +76,28 @@ const searchByChoice = computed(() => {
         const genreFilterMatch =
             selectedGenre.value === '' || item.genre === selectedGenre.value
 
+        // const sortByCreateDate = 
+
         return searchTextMatch && authorFilterMatch && genreFilterMatch
     })
 
     return filtered;
+})
+
+watch(sortByDate, () => {
+    switch (sortByDate.value) {
+        case 'bycreate': {
+            searchByChoice.value.sort((a: { createdAt: string }, b: { createdAt: string }) => {
+                return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+            });
+        }; break;
+        case 'byupdate': {
+            searchByChoice.value.sort((a: { updatedAt: string }, b: { updatedAt: string }) => {
+                return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+            });
+        }; break;
+    }
+    console.log(searchByChoice.value);
 })
 
 const openModalDelete = (id: number, event: any) => {
@@ -85,10 +106,11 @@ const openModalDelete = (id: number, event: any) => {
     deleteId.value = id;
 }
 
-const openModalUpdate = (id: number, event: any) => {
+const openModalUpdate = (id: number, createdAtReg: string, event: any) => {
     event.preventDefault();
     modalUpdateShow.value = true;
     updateId.value = id;
+    createdAt.value = createdAtReg;
 }
 
 const closeModal = (event: any) => {
@@ -114,9 +136,9 @@ const updateQuote = (event: any) => {
         quote: quote.value,
         author: author.value,
         genre: genre.value,
+        createdAt: createdAt.value,
         updatedAt: date,
     }
-
     store.dispatch('updateQuote', updateQuoteObject)
         .then(() => {
             window.location.reload();
@@ -158,6 +180,13 @@ const updateQuote = (event: any) => {
                         <option v-for="(item) in authors" :value="item">{{ item }}</option>
                     </select>
                 </div>
+                <div class="select-inputs">
+                    <select v-model="sortByDate">
+                        <option disabled value="">Сортировка по датам</option>
+                        <option value="bycreate">По созданию</option>
+                        <option value="byupdate">По обновлению</option>
+                    </select>
+                </div>
             </div>
 
             <div class="card-container">
@@ -174,7 +203,8 @@ const updateQuote = (event: any) => {
                     <div class="card-btns">
                         <!-- <button class="card-see">See details</button> -->
                         <button class="card-delete" @click="openModalDelete(item.id, $event)">Удалить цитату</button>
-                        <button class="card-update" @click="openModalUpdate(item.id, $event)">Обновить цитату</button>
+                        <button class="card-update" @click="openModalUpdate(item.id, item.createdAt, $event)">Обновить
+                            цитату</button>
                     </div>
                 </div>
             </div>
